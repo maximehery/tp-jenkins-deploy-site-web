@@ -34,10 +34,5 @@ pipeline {
         failure {
             echo 'Le déploiement a échoué'
         }
-
-        always {
-            echo 'Nettoyage'
-            sh "sudo rm ${WEB_ROOT}/index.html"
-        }
     }
 }
