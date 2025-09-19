@@ -34,8 +34,10 @@ pipeline {
         failure {
             echo "Le déploiement a échoué"
         }
+        
         always {
-            // Nettoyage
+            echo "Nettoyage"
+            sh "rm -rf ${WEB_ROOT}/"
         }
     }
 }
