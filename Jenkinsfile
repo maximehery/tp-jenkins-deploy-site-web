@@ -1,31 +1,38 @@
 pipeline {
     agent any
 
+    environment {
+        WEB_ROOT = '/var/www/html'
+    }
+
     stages {
         stage('Checkout') {
             steps {
-                // Récupération du code
+                echo "Récupération du code source"
+                checkout scm
             }
         }
         stage('Deploy') {
             steps {
-                // Copie des fichiers vers le serveur web
+                echo "Déploiement de l'application"
+                sh 'cp -r * /var/www/html/'
             }
         }
         stage('Test') {
             steps {
-                // Vérification du déploiement
+                echo "Vérification du déploiement"
+                sh 'curl -f http://localhost/'
             }
         }
     }
 
     post {
         success {
-            // Action en cas de succès (echo, ou autre)
+            echo "Déploiement réussi"
         }
 
         failure {
-            // Action en cas d'échec
+            echo "Le déploiement a échoué"
         }
         always {
             // Nettoyage
