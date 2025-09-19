@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         WEB_ROOT = '/var/www/html'
+        BACKUP_DIR = '/var/www/html.backup'
     }
 
     stages {
@@ -12,12 +13,21 @@ pipeline {
                 checkout scm
             }
         }
+
+        stage('Backup') {
+            steps {
+                echo 'Sauvegarde du site actuel'
+                sh 'sudo cp -r ${WEB_ROOT} ${BACKUP_DIR} || true'
+            }
+        }
+
         stage('Deploy') {
             steps {
                 echo "Déploiement de l'application"
                 sh 'sudo cp -r * /var/www/html/'
             }
         }
+
         stage('Test') {
             steps {
                 echo 'Vérification du déploiement'
@@ -33,6 +43,11 @@ pipeline {
 
         failure {
             echo 'Le déploiement a échoué'
+        }
+
+        always {
+            echo 'Nettoyage'
+            sh 'sudo rm -rf ${BACKUP_DIR} || true'
         }
     }
 }
